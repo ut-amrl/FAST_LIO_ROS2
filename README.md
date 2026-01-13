@@ -1,4 +1,13 @@
-> ROS2 Fork repo maintainer: [Ericsiii](https://github.com/Ericsii)
+## Docker (Humble / Jazzy)
+### 1. Build docker image
+```bash
+./docker/build_docker.sh [ROS_DISTRO]
+```
+
+### 2. Run docker
+```bash
+./docker/run_docker.sh [ROS_DISTRO] [DOCKER_RUN_ARGS ...]
+```
 
 ## Related Works and Extended Application
 
