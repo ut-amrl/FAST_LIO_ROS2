@@ -66,4 +66,15 @@ else
   safe_source "$install_setup"
 fi
 
+# Tmux session
+if [ "${USE_TMUX:-0}" = "1" ]; then
+  SESSION="${TMUX_SESSION:-fastlio}"
+
+  # If no explicit command was provided, open tmux
+  if [ $# -eq 0 ] || { [ "$1" = "bash" ] && [ $# -eq 1 ]; } || { [ "$1" = "bash" ] && [ "${2:-}" = "-l" ]; }; then
+    log "starting tmux session: ${SESSION}"
+    exec tmux new -A -s "${SESSION}"
+  fi
+fi
+
 exec "$@"

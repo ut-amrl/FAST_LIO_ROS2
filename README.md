@@ -3,11 +3,32 @@
 ```bash
 ./docker/build_docker.sh [ROS_DISTRO]
 ```
-
 ### 2. Run docker
 ```bash
 ./docker/run_docker.sh [ROS_DISTRO] [DOCKER_RUN_ARGS ...]
 ```
+
+## Trajectory Logging
+### 1. Launch FAST-LIO with the CSV logger enabled
+```bash
+ros2 launch fast_lio mapping.launch.py \
+  config_file:=<CONFIG_YAML> \
+  log_odom:=true \
+  csv_out:=<OUTPUT_CSV_PATH> \
+  tf_config:=<TF_CONFIG_JSON_PATH>
+```
+- <CONFIG_YAML>: e.g. mid360.yaml
+- <OUTPUT_CSV_PATH>: e.g. /root/fastlio_ws/log/odom.csv (or a bind-mounted path like /logs/odom.csv)
+- <TF_CONFIG_JSON_PATH> (optional, e.g., scripts/tf_config/bluebonnet.json): JSON file containing the IMU→target extrinsic transform.
+FAST-LIO publishes poses in the IMU frame; use tf_config if you want to log a different frame (e.g., base_link).
+If omitted, the logger uses identity and logs the IMU pose as-is.
+
+### 2. Play a bagfile
+```
+ros2 bag play /path/to/bag
+```
+
+
 
 ## Related Works and Extended Application
 

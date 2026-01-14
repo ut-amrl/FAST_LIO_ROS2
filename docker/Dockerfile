@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
     git \
+    tmux \
     libeigen3-dev \
     libpcl-dev \
     libpcap-dev \
@@ -17,6 +18,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libyaml-cpp-dev \
     python3-colcon-common-extensions \
     python3-rosdep \
+    python3-numpy \
+    python3-scipy \
     ros-${ROS_DISTRO}-pcl-conversions \
     ros-${ROS_DISTRO}-pcl-ros \
     ros-${ROS_DISTRO}-rviz2 \
