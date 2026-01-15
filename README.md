@@ -1,11 +1,13 @@
 ## Docker (Humble / Jazzy)
 ### 1. Build docker image
 ```bash
-./docker/build_docker.sh [ROS_DISTRO]
+ROS_DISTRO=humble docker compose -f docker/compose.yaml build
+ROS_DISTRO=jazzy docker compose -f docker/compose.yaml build
 ```
 ### 2. Run docker
 ```bash
-./docker/run_docker.sh [ROS_DISTRO] [DOCKER_RUN_ARGS ...]
+ROS_DISTRO=humble docker compose -f docker/compose.yaml run --rm [DOCKER_RUN_ARGS] fastlio
+ROS_DISTRO=jazzy docker compose -f docker/compose.yaml run --rm [DOCKER_RUN_ARGS] fastlio
 ```
 
 ## Trajectory Logging
