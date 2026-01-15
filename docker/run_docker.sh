@@ -15,15 +15,24 @@ mkdir -p "${CACHE_DIR}/build" "${CACHE_DIR}/install" "${CACHE_DIR}/log"
 
 # Optional X11 support
 X11_ARGS=()
-if [ -n "${DISPLAY:-}" ] && [ -S /tmp/.X11-unix/X0 -o -d /tmp/.X11-unix ]; then
-  X11_ARGS+=(
-    -e "DISPLAY=${DISPLAY}"
-    -e "QT_X11_NO_MITSHM=1"
-    -v "/tmp/.X11-unix:/tmp/.X11-unix:rw"
-  )
+if [ -n "${DISPLAY:-}" ]; then
+  N="${DISPLAY#*:}"; N="${N%%.*}"   # ":1.0" -> "1"
+  if [ -S "/tmp/.X11-unix/X$N" ]; then
+    XAUTHORITY="${XAUTHORITY:-$HOME/.Xauthority}"
+    X11_ARGS+=(
+      -e DISPLAY="$DISPLAY"
+      -v /tmp/.X11-unix:/tmp/.X11-unix:rw
+      -e QT_X11_NO_MITSHM=1
+      -e XDG_RUNTIME_DIR=/tmp/runtime-root
+    )
+    [ -f "$XAUTHORITY" ] && X11_ARGS+=(-e XAUTHORITY="$XAUTHORITY" -v "$XAUTHORITY:$XAUTHORITY:ro")
+  fi
 fi
 
 docker run -it --rm --net=host \
+  --gpus all \
+  -e NVIDIA_VISIBLE_DEVICES=all \
+  -e NVIDIA_DRIVER_CAPABILITIES=all \
   "${X11_ARGS[@]}" \
   -e USE_TMUX=1 \
   -e TMUX_SESSION="fastlio" \
