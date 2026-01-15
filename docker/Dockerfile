@@ -49,7 +49,7 @@ RUN source /opt/ros/${ROS_DISTRO}/setup.bash \
     && colcon build --symlink-install
 
 # Setup FAST-LIO workspace
-WORKDIR /root/fastlio_ws/src
+WORKDIR /root/fastlio_ws
 
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
