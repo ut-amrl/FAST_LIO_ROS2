@@ -26,7 +26,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ${XAUTHORITY:-$HOME/.Xauthority}:${XAUTHORITY:-$HOME/.Xauthority}:ro
-      - ./:/root/fastlio_ws/src/fast_lio_ros2:rw
+      - ../:/root/fastlio_ws/src/fast_lio_ros2:rw
       - ./.fastlio_cache/${ROS_DISTRO:-humble}/build:/root/fastlio_ws/build:rw
       - ./.fastlio_cache/${ROS_DISTRO:-humble}/install:/root/fastlio_ws/install:rw
       - ./.fastlio_cache/${ROS_DISTRO:-humble}/log:/root/fastlio_ws/log:rw
