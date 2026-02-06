@@ -40,6 +40,7 @@ class OdomCSVLogger(Node):
         super().__init__("odom_csv_logger")
 
         self.first_write = True
+        self.write_count = 0
         self.csv_file = open(output_path, "w", newline="")
         self.writer = None
 
@@ -92,13 +93,18 @@ class OdomCSVLogger(Node):
 
         formatted = {k: f"{v:.8f}" for k, v in data.items()}
         self.writer.writerow(formatted)
-        # Optional: flush so rows appear on disk even if the node is killed
-        self.csv_file.flush()
+
+        self.write_count += 1
+        if self.write_count % 100 == 0:
+            self.csv_file.flush()
 
     def shutdown(self):
-        self.get_logger().info("Shutting down OdomCSVLogger")
+        self.get_logger().info("Shutting down OdomCSVLogger...")
         try:
+            # FORCE FLUSH: Writes the remaining 1-99 rows in the buffer to disk
+            self.csv_file.flush()
             self.csv_file.close()
+            self.get_logger().info(f"Success. Total {self.write_count} poses saved to CSV.")
         except Exception as e:
             self.get_logger().warning(f"Error closing CSV file: {e}")
 
@@ -119,9 +125,17 @@ def main(args, ros_args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--topic", type=str, default="Odometry", help="Odometry topic to subscribe to")
-    parser.add_argument("--tf_config", type=str, help="Path to JSON config file with transformation matrices")
-    parser.add_argument("--output", type=str, default="odom.csv", help="Path to output CSV file")
+    parser.add_argument(
+        "--topic", type=str, default="Odometry", help="Odometry topic to subscribe to"
+    )
+    parser.add_argument(
+        "--tf_config",
+        type=str,
+        help="Path to JSON config file with transformation matrices",
+    )
+    parser.add_argument(
+        "--output", type=str, default="odom.csv", help="Path to output CSV file"
+    )
     args, ros_args = parser.parse_known_args()
 
     main(args, ros_args)
