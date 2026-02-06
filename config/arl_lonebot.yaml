@@ -24,10 +24,10 @@
             scan_rate: 10
 
         mapping:
-            acc_cov: 0.1
-            gyr_cov: 0.1
-            b_acc_cov: 0.0001
-            b_gyr_cov: 0.0001
+            acc_cov: 0.3
+            gyr_cov: 0.3
+            b_acc_cov: 0.0003
+            b_gyr_cov: 0.0003
             fov_degree: 180.0
             det_range: 150.0
             extrinsic_est_en:  false      # true: enable the online estimation of IMU-LiDAR extrinsic
