@@ -19,22 +19,22 @@
         preprocess:
             lidar_type: 3 # 1 for Livox serials LiDAR, 2 for Velodyne LiDAR, 3 for ouster LiDAR, 4 for any other pointcloud input
             scan_line: 64
-            blind: 5.0
+            blind: 3.0
             timestamp_unit: 3
             scan_rate: 10
 
         mapping:
-            acc_cov: 0.3
-            gyr_cov: 0.3
-            b_acc_cov: 0.0003
-            b_gyr_cov: 0.0003
+            acc_cov: 0.1
+            gyr_cov: 0.1
+            b_acc_cov: 0.0001
+            b_gyr_cov: 0.0001
             fov_degree: 180.0
             det_range: 150.0
-            extrinsic_est_en:  false      # true: enable the online estimation of IMU-LiDAR extrinsic
-            extrinsic_T: [0.0018940720763023489, -0.11992831940823015, 0.0513127965997498]
-            extrinsic_R: [-0.0181710420058869,-0.9998192272358706,-0.005596970777727243,
-                           0.9998342729010758,-0.0181769805195648, 0.001011983976142187,
-                          -0.0011135370657969,-0.0055776544046577, 0.9999838247724537]
+            extrinsic_est_en: false      # true: enable the online estimation of IMU-LiDAR extrinsic
+            extrinsic_T: [-0.04827, -0.008129, 0.3312]
+            extrinsic_R: [-1.0, 0.0, 0.0,
+                           0.0,-1.0, 0.0,
+                           0.0, 0.0, 1.0]
 
         publish:
             path_en: true                # true: publish Path
