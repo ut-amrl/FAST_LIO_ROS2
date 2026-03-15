@@ -1,34 +1,36 @@
-## Docker (Humble / Jazzy)
-### 1. Build docker image
+## Docker Odom Quickstart
+### 1. Build once
 ```bash
-ROS_DISTRO=humble docker compose -f docker/compose.yaml build
-ROS_DISTRO=jazzy docker compose -f docker/compose.yaml build
-```
-### 2. Run docker
-```bash
-ROS_DISTRO=humble docker compose -f docker/compose.yaml run --rm [DOCKER_RUN_ARGS] fastlio
-ROS_DISTRO=jazzy docker compose -f docker/compose.yaml run --rm [DOCKER_RUN_ARGS] fastlio
+ROS_DISTRO=humble bash scripts/pipeline.sh build
+ROS_DISTRO=jazzy bash scripts/pipeline.sh build
 ```
 
-## Trajectory Logging
-### 1. Launch FAST-LIO with the CSV logger enabled
+### 2. Run one bag
 ```bash
-ros2 launch fast_lio mapping.launch.py \
-  config_file:=<CONFIG_YAML> \
-  log_odom:=true \
-  csv_out:=<OUTPUT_CSV_PATH> \
-  tf_config:=<TF_CONFIG_JSON_PATH>
+ROS_DISTRO=humble bash scripts/pipeline.sh run \
+  --bag-path <bag_dir> \
+  --config-file <config.yaml>
 ```
-- <CONFIG_YAML>: e.g. mid360.yaml
-- <OUTPUT_CSV_PATH>: e.g. /root/fastlio_ws/log/odom.csv (or a bind-mounted path like /logs/odom.csv)
-- <TF_CONFIG_JSON_PATH> (optional, e.g., scripts/tf_config/bluebonnet.json): JSON file containing the IMU→target extrinsic transform.
-FAST-LIO publishes poses in the IMU frame; use tf_config if you want to log a different frame (e.g., base_link).
-If omitted, the logger uses identity and logs the IMU pose as-is.
 
-### 2. Play a bagfile
+### 3. Run many bags
+```bash
+ROS_DISTRO=humble bash scripts/pipeline.sh run \
+  --bag-list <bags.txt> \
+  --config-file <config.yaml>
 ```
-ros2 bag play /path/to/bag
-```
+
+### What you get
+- CSV odometry in `logs/<timestamp>/<bag_id>_trajectory.csv`
+- One CSV per bag
+- First run builds FAST-LIO in Docker; later runs reuse the cache
+
+### Useful options
+- `--tf-config <tf.json>`
+- `--rviz true`
+- `--rate auto|<num>`
+- `--imu-topic <topic>`
+- `--lidar-topic <topic>`
+- `bash scripts/pipeline.sh help`
 
 
 
