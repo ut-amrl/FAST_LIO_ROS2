@@ -485,10 +485,27 @@ config_path, topic_key = sys.argv[1], sys.argv[2]
 with open(config_path, "r", encoding="utf-8") as fh:
     data = yaml.safe_load(fh) or {}
 
-root = data.get("/**") or {}
-ros_params = root.get("ros__parameters") or {}
-common = ros_params.get("common") or {}
-value = common.get(topic_key)
+if not isinstance(data, dict):
+    raise SystemExit(1)
+
+value = None
+
+common = data.get("common")
+if isinstance(common, dict):
+    value = common.get(topic_key)
+
+if not value:
+    root = data.get("/**")
+    if isinstance(root, dict):
+        ros_params = root.get("ros__parameters")
+        if isinstance(ros_params, dict):
+            common = ros_params.get("common")
+            if isinstance(common, dict):
+                value = common.get(topic_key)
+
+if isinstance(value, str):
+    value = value.strip()
+
 if not value:
     raise SystemExit(1)
 print(value)
@@ -642,7 +659,7 @@ if [[ "${ALL_TOPICS}" != "true" ]]; then
     IMU_TOPIC="${IMU_TOPIC_OVERRIDE}"
   else
     IMU_TOPIC="$(read_config_topic "imu_topic")" || {
-      echo "Failed to read common.imu_topic from ${CONFIG_CONTAINER_PATH}" >&2
+      echo "Failed to read imu_topic from ${CONFIG_CONTAINER_PATH} (supported layouts: common.imu_topic or /**.ros__parameters.common.imu_topic)" >&2
       exit 1
     }
   fi
@@ -651,7 +668,7 @@ if [[ "${ALL_TOPICS}" != "true" ]]; then
     LIDAR_TOPIC="${LIDAR_TOPIC_OVERRIDE}"
   else
     LIDAR_TOPIC="$(read_config_topic "lid_topic")" || {
-      echo "Failed to read common.lid_topic from ${CONFIG_CONTAINER_PATH}" >&2
+      echo "Failed to read lid_topic from ${CONFIG_CONTAINER_PATH} (supported layouts: common.lid_topic or /**.ros__parameters.common.lid_topic)" >&2
       exit 1
     }
   fi
