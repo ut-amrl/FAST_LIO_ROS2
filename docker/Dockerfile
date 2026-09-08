@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 SHELL ["/bin/bash", "-c"]
 
 # Build Livox SDK
-RUN git clone https://github.com/Livox-SDK/Livox-SDK2.git /root/Livox-SDK2 \
+RUN git clone --depth 1 --branch v1.2.5 https://github.com/Livox-SDK/Livox-SDK2.git /root/Livox-SDK2 \
  && cd /root/Livox-SDK2 \
  && curl -fsSL https://patch-diff.githubusercontent.com/raw/Livox-SDK/Livox-SDK2/pull/85.patch | git apply
 
